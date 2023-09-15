@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Audio Coverage Calculator</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/uikit@3.16.26/dist/css/uikit.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.16.26/dist/js/uikit.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.16.26/dist/js/uikit-icons.min.js"></script>
+  </head>
+
+  <body>
+    <div class="uk-container uk-container-xsmall uk-padding-small">
+      <h1 class="uk-h2">Overhead Speaker's Coverage Calculation</h1>
+
+      <form class="uk-form-stacked" id="calculation">
+        <div class="uk-margin">
+          <label class="uk-form-label" for="dispersionAngle"
+            >Dispersion angle, deg</label
+          >
+          <div class="uk-form-controls">
+            <input
+              type="number"
+              class="uk-input"
+              id="dispersionAngle"
+              required
+              max="100"
+              value="100"
+            />
+          </div>
+        </div>
+
+        <div class="uk-margin">
+          <label class="uk-form-label" for="speakerHeight"
+            >Height above the floor, m</label
+          >
+          <div class="uk-form-controls">
+            <input
+              type="number"
+              class="uk-input"
+              id="speakerHeight"
+              required
+              step="0.01"
+              value="3"
+            />
+          </div>
+        </div>
+
+        <div class="uk-margin">
+          <button type="submit" class="uk-button uk-button-primary">
+            Calculate
+          </button>
+        </div>
+      </form>
+
+      <div>
+        Calculated circular coverage zone radius:
+        <span class="uk-text-bold" id="circularCoverageZoneRadius">-</span>
+      </div>
+    </div>
+
+    <script>
+      const form = document.getElementById("calculation");
+      const dispersionAngleInput = document.getElementById("dispersionAngle");
+      const speakerHeightInput = document.getElementById("speakerHeight");
+      const circularCoverageZoneRadiusResult = document.getElementById(
+        "circularCoverageZoneRadius",
+      );
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        circularCoverageZoneRadiusResult.textContent = "-";
+
+        const dispersionAngle = dispersionAngleInput.value;
+        const speakerHeight = speakerHeightInput.value;
+
+        const circularCoverageZoneRadius =
+          (speakerHeight - 1.07) *
+          Math.tan(((dispersionAngle / 2) * Math.PI) / 180);
+        const circularCoverageZoneRadiusRounded =
+          Math.round((circularCoverageZoneRadius + Number.EPSILON) * 100) / 100;
+
+        circularCoverageZoneRadiusResult.textContent = `${formatNumber(
+          circularCoverageZoneRadiusRounded,
+        )}m`;
+      });
+
+      function formatNumber(value) {
+        return new Intl.NumberFormat("en-US", {
+          minimumFractionDigits: 2,
+        }).format(value);
+      }
+    </script>
+  </body>
+</html>
